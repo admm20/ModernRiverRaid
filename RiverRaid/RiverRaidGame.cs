@@ -28,8 +28,6 @@ namespace RiverRaid
         public static int GAME_WIDTH = 1920;
         public static int GAME_HEIGHT = 1080;
 
-        private Texture2D testText;
-
         private Texture2D blackTile;
 
         private RenderTarget2D renderer;
@@ -38,6 +36,10 @@ namespace RiverRaid
         private int transition_timer = 0;
         private bool transition_fade_in = false; // true - fade in // false - fade out
         private bool transition_timer_working = false;
+
+#if WINDOWS
+        private MouseState previousMouseState;
+#endif
 
         // przejscie z ciemnego ekranu w jasny
         public void BlackToNormalTransition()
@@ -83,7 +85,9 @@ namespace RiverRaid
 
 #if WINDOWS
             Window.AllowUserResizing = true;
+            previousMouseState = Mouse.GetState();
 #endif
+
             renderer = new RenderTarget2D(GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
 
             // change update frequency
@@ -99,7 +103,6 @@ namespace RiverRaid
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //TODO: use this.Content to load your game content here 
-            testText = Content.Load<Texture2D>("Shared/Textures/test");
             blackTile = Content.Load<Texture2D>("Shared/Textures/black_tile");
 
             game.LoadContent(Content);
@@ -145,8 +148,18 @@ namespace RiverRaid
 
             // STEROWANIE:
 #if WINDOWS
-            // not implemented yet
-            
+            MouseState mouseStateNow = Mouse.GetState();
+            if(previousMouseState.LeftButton == ButtonState.Pressed)
+            {
+                int mouse_x = (int)(mouseStateNow.Position.X * ((float)GAME_WIDTH / GraphicsDevice.PresentationParameters.BackBufferWidth));
+                int mouse_y = (int)(mouseStateNow.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
+                currentState.CursorHolding(mouse_x, mouse_y, 0);
+                if(mouseStateNow.LeftButton == ButtonState.Released)
+                {
+                    currentState.CursorClick(mouse_x, mouse_y);
+                }
+            }
+            previousMouseState = mouseStateNow;
 #elif ANDROID
             TouchCollection touches = TouchPanel.GetState();
 
