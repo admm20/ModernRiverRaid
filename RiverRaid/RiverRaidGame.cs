@@ -37,8 +37,12 @@ namespace RiverRaid
         private bool transition_fade_in = false; // true - fade in // false - fade out
         private bool transition_timer_working = false;
 
+        public int mouse_x = 0;
+        public int mouse_y = 0;
+
 #if WINDOWS
         private MouseState previousMouseState;
+        
 #endif
 
         // przejscie z ciemnego ekranu w jasny
@@ -59,6 +63,20 @@ namespace RiverRaid
             transition_fade_in = false;
         }
 
+        public void GoToMenu()
+        {
+           
+            this.mainMenu.OnEnter();
+            currentState = mainMenu;
+        }
+
+        public void GoToGameMode()
+        {
+            
+            this.game.OnEnter();
+            currentState = game;
+        }
+
         public RiverRaidGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -66,21 +84,22 @@ namespace RiverRaid
             
 #if WINDOWS
             graphics.IsFullScreen = false;
+            this.IsMouseVisible = true;
 #elif ANDROID
             graphics.IsFullScreen = true;
             //graphics.PreferredBackBufferWidth = 800;
             //graphics.PreferredBackBufferHeight = 480;
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
 #endif
-
-            game = new GameMode(this);
             mainMenu = new MainMenu(this);
-
-            currentState = mainMenu;
+            game = new GameMode(this);
+            GoToMenu();
         }
 
         protected override void Initialize()
         {
+
+            Console.WriteLine(GraphicsDevice.PresentationParameters.BackBufferWidth);
             // TODO: Add your initialization logic here
 
 #if WINDOWS
@@ -149,10 +168,11 @@ namespace RiverRaid
             // STEROWANIE:
 #if WINDOWS
             MouseState mouseStateNow = Mouse.GetState();
-            if(previousMouseState.LeftButton == ButtonState.Pressed)
+
+            mouse_x = (int)(mouseStateNow.Position.X * ((float)GAME_WIDTH / GraphicsDevice.PresentationParameters.BackBufferWidth));
+            mouse_y = (int)(mouseStateNow.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
+            if (previousMouseState.LeftButton == ButtonState.Pressed)
             {
-                int mouse_x = (int)(mouseStateNow.Position.X * ((float)GAME_WIDTH / GraphicsDevice.PresentationParameters.BackBufferWidth));
-                int mouse_y = (int)(mouseStateNow.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
                 currentState.CursorHolding(mouse_x, mouse_y, 0);
                 if(mouseStateNow.LeftButton == ButtonState.Released)
                 {
@@ -182,7 +202,7 @@ namespace RiverRaid
                 }
             }
 #endif
-
+            currentState.Update(gameTime.ElapsedGameTime.Milliseconds, this);
 
             // TODO: Add your update logic here			
             base.Update(gameTime);
