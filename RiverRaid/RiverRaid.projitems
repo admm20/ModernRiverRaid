@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game\GameMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\MapLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\TileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Menu\MainMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProgramState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RiverRaidGame.cs" />
@@ -20,5 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\Maps.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

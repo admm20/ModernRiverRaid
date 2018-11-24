@@ -1,0 +1,63 @@
+﻿Poradnik jak pisac mapy:
+Nalezy stworzyc fragmenty mapy o wymiarach 16x9, ktore potem sa losowo generowane
+w niekonczaca sie mape. Program sam domysla sie ktore fragmenty mapy polaczyc z 
+innymi fragmentami mapy
+
+0 - woda
+1 - trawa
+2 - dom
+
+3 - \  dolne pochylenie
+	 \
+
+4 -  / dolne pochylenie
+	/
+	
+5 -  / gorne pochylenie
+	/
+
+6 - \ gorne pochylenie
+	 \
+
+7 - droga
+8 - lewa strona mostu
+9 - prawa strona mostu
+
+MAPA MA SIE ZACZYNAC NA "[BEGIN]" I KONCZYC NA "[END]". BEZ SPACJI NA KONCU!!!
+
+[BEGIN]
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+[END]
+
+[BEGIN]
+1111000000001111
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+[END]
+
+[BEGIN]
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1100000000000011
+1111000000001111
+[END]
+

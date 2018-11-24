@@ -29,6 +29,7 @@ namespace RiverRaid
         public static int GAME_HEIGHT = 1080;
 
         private Texture2D blackTile;
+        private SpriteFont pauseFont;
 
         private RenderTarget2D renderer;
 
@@ -41,6 +42,7 @@ namespace RiverRaid
 
 #if WINDOWS
         private MouseState previousMouseState;
+        public KeyboardState previousKeyboardState;
 #endif
 
         public void PauseGame()
@@ -52,6 +54,13 @@ namespace RiverRaid
         {
             GamePaused = false;
         }
+
+        public void RunGameMode()
+        {
+            currentState = game;
+            currentState.OnEnter();
+        }
+        
 
         // przejscie z ciemnego ekranu w jasny
         public void BlackToNormalTransition()
@@ -73,6 +82,7 @@ namespace RiverRaid
 
         public RiverRaidGame()
         {
+            this.IsMouseVisible = true;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             
@@ -88,7 +98,8 @@ namespace RiverRaid
             game = new GameMode(this);
             mainMenu = new MainMenu(this);
 
-            currentState = mainMenu;
+            //currentState = mainMenu;
+            RunGameMode();
         }
 
         protected override void Initialize()
@@ -98,6 +109,7 @@ namespace RiverRaid
 #if WINDOWS
             Window.AllowUserResizing = true;
             previousMouseState = Mouse.GetState();
+            previousKeyboardState = Keyboard.GetState();
 #endif
 
             renderer = new RenderTarget2D(GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
@@ -116,6 +128,7 @@ namespace RiverRaid
 
             //TODO: use this.Content to load your game content here 
             blackTile = Content.Load<Texture2D>("Shared/Textures/black_tile");
+            pauseFont = Content.Load<SpriteFont>("Shared/Fonts/PauseFont");
 
             game.LoadContent(Content);
             mainMenu.LoadContent(Content);
@@ -172,6 +185,28 @@ namespace RiverRaid
                 }
             }
             previousMouseState = mouseStateNow;
+
+            KeyboardState keyboardStateNow = Keyboard.GetState();
+            if(keyboardStateNow.GetPressedKeys().Length > 0)
+            {
+                foreach(Keys k in keyboardStateNow.GetPressedKeys())
+                {
+                    currentState.KeyboardKeyDown(k);
+
+                }
+
+            }
+            if (keyboardStateNow.IsKeyUp(Keys.P) && previousKeyboardState.IsKeyDown(Keys.P))
+            {
+                currentState.KeyboardKeyClick(Keys.P);
+            }
+
+            if (keyboardStateNow.IsKeyUp(Keys.Space) && keyboardStateNow.IsKeyDown(Keys.Space))
+            {
+                currentState.KeyboardKeyClick(Keys.Space);
+            }
+            previousKeyboardState = keyboardStateNow;
+
 #elif ANDROID
             TouchCollection touches = TouchPanel.GetState();
 
@@ -194,7 +229,12 @@ namespace RiverRaid
                 }
             }
 #endif
-
+            if (GamePaused)
+            {
+                // do nothing
+            }
+            else
+                currentState.Update(gameTime.ElapsedGameTime.Milliseconds, this);
 
             // TODO: Add your update logic here			
             base.Update(gameTime);
@@ -208,7 +248,14 @@ namespace RiverRaid
             GraphicsDevice.Clear(Color.Blue);
 
             spriteBatch.Begin();
-            currentState.Draw(spriteBatch);
+            if (GamePaused)
+            {
+                spriteBatch.DrawString(pauseFont, "Press P to return to game", new Vector2(800, 540), Color.White);
+            }
+            else
+            {
+                currentState.Draw(spriteBatch);
+            }
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

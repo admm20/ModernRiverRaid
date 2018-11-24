@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace RiverRaid.Menu
 {
@@ -15,7 +16,6 @@ namespace RiverRaid.Menu
 
         // DO WYWALENIA
         private List<Rectangle> MultitouchTest = new List<Rectangle>();
-
 
         public override void NormalToBlackTransitionFinished(bool dozmiany)
         {
@@ -63,6 +63,15 @@ namespace RiverRaid.Menu
         }
 
         public override void Update(int deltaTime, RiverRaidGame game)
+        {
+        }
+
+        public override void KeyboardKeyDown(Keys key)
+        {
+
+        }
+
+        public override void KeyboardKeyClick(Keys key)
         {
         }
 

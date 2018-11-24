@@ -25,6 +25,13 @@
 /processorParam:TextureFormat=Color
 /build:Android/Textures/test.bmp
 
+#begin Shared/Fonts/PauseFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Shared/Fonts/PauseFont.spritefont
+
 #begin Shared/Textures/black_tile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,6 +43,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Shared/Textures/black_tile.png
+
+#begin Shared/Textures/black_tile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shared/Textures/black_tile.png
+
+#begin Shared/Textures/player_bullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shared/Textures/player_bullet.png
 
 #begin Shared/Textures/test.bmp
 /importer:TextureImporter
