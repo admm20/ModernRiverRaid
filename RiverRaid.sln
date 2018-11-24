@@ -3,18 +3,45 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiverRaid", "RiverRaid\RiverRaid.csproj", "{FDEA2942-8A1F-44EF-BDA7-1987CC67F9A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiverRaidAndroid", "RiverRaidAndroid\RiverRaidAndroid.csproj", "{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RiverRaid", "RiverRaid\RiverRaid.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiverRaidWindows", "RiverRaidWindows\RiverRaidWindows.csproj", "{D64A9007-9CD8-4749-B569-90528124EEC8}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RiverRaid\RiverRaid.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
+		RiverRaid\RiverRaid.projitems*{ac13afca-04c6-4ba1-bfba-c256ec8e9494}*SharedItemsImports = 4
+		RiverRaid\RiverRaid.projitems*{d64a9007-9cd8-4749-b569-90528124eec8}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FDEA2942-8A1F-44EF-BDA7-1987CC67F9A0}.Debug|x86.ActiveCfg = Debug|x86
-		{FDEA2942-8A1F-44EF-BDA7-1987CC67F9A0}.Debug|x86.Build.0 = Debug|x86
-		{FDEA2942-8A1F-44EF-BDA7-1987CC67F9A0}.Release|x86.ActiveCfg = Release|x86
-		{FDEA2942-8A1F-44EF-BDA7-1987CC67F9A0}.Release|x86.Build.0 = Release|x86
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|x86.Build.0 = Release|Any CPU
+		{AC13AFCA-04C6-4BA1-BFBA-C256EC8E9494}.Release|x86.Deploy.0 = Release|Any CPU
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Debug|Any CPU.Build.0 = Debug|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Debug|x86.ActiveCfg = Debug|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Debug|x86.Build.0 = Debug|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Release|Any CPU.ActiveCfg = Release|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Release|Any CPU.Build.0 = Release|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Release|x86.ActiveCfg = Release|x86
+		{D64A9007-9CD8-4749-B569-90528124EEC8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

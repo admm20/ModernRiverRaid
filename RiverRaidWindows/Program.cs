@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RiverRaid
+namespace RiverRaidWindows
 {
 #if WINDOWS || LINUX
     /// <summary>
@@ -14,7 +14,7 @@ namespace RiverRaid
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new RiverRaid.RiverRaidGame())
                 game.Run();
         }
     }
