@@ -32,6 +32,8 @@ namespace RiverRaid
 
         private RenderTarget2D renderer;
 
+        public bool GamePaused = false;
+
         private float transition_opacity = 0.0f;
         private int transition_timer = 0;
         private bool transition_fade_in = false; // true - fade in // false - fade out
@@ -40,6 +42,16 @@ namespace RiverRaid
 #if WINDOWS
         private MouseState previousMouseState;
 #endif
+
+        public void PauseGame()
+        {
+            GamePaused = true;
+        }
+
+        public void ResumeGame()
+        {
+            GamePaused = false;
+        }
 
         // przejscie z ciemnego ekranu w jasny
         public void BlackToNormalTransition()
