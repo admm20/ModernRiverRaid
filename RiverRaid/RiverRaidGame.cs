@@ -25,10 +25,13 @@ namespace RiverRaid
         GameMode game;
         MainMenu mainMenu;
 
+        public bool GamePaused = false;
+
         public static int GAME_WIDTH = 1920;
         public static int GAME_HEIGHT = 1080;
 
         private Texture2D blackTile;
+        private Texture2D pauseTexture;
 
         private RenderTarget2D renderer;
 
@@ -36,7 +39,7 @@ namespace RiverRaid
         private int transition_timer = 0;
         private bool transition_fade_in = false; // true - fade in // false - fade out
         private bool transition_timer_working = false;
-
+        
         public int mouse_x = 0;
         public int mouse_y = 0;
 
@@ -95,8 +98,6 @@ namespace RiverRaid
 #endif
             mainMenu = new MainMenu(this);
             game = new GameMode(this);
-            //GoToMenu();
-            GoToGameMode();
         }
 
         protected override void Initialize()
@@ -126,12 +127,16 @@ namespace RiverRaid
 
             //TODO: use this.Content to load your game content here 
             blackTile = Content.Load<Texture2D>("Shared/Textures/black_tile");
+            pauseTexture = Content.Load<Texture2D>("Shared/Textures/paused_game");
 
             game.LoadContent(Content);
             mainMenu.LoadContent(Content);
+
+            //GoToMenu();
+            GoToGameMode();
         }
 
-
+        private bool backPressed = false;
         protected override void Update(GameTime gameTime)
         {
 #if WINDOWS
@@ -140,9 +145,25 @@ namespace RiverRaid
 #elif ANDROID
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                Process.KillProcess(Process.MyPid());
+                backPressed = true;
                 //Exit();
 
+            }
+
+            if(backPressed && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released)
+            {
+                backPressed = false;
+                if (GamePaused)
+                {
+                    GoToMenu();
+                    GamePaused = false;
+                }
+                else if(currentState == mainMenu)
+                {
+                    Process.KillProcess(Process.MyPid());
+                }
+                else
+                    GamePaused = true;
             }
 #endif
             // EFEKTY PRZEJSCIA
@@ -199,7 +220,7 @@ namespace RiverRaid
                 currentState.KeyboardKeyClick(Keys.P);
             }
 
-            if (keyboardStateNow.IsKeyUp(Keys.Space) && keyboardStateNow.IsKeyDown(Keys.Space))
+            if (keyboardStateNow.IsKeyUp(Keys.Space) && previousKeyboardState.IsKeyDown(Keys.Space))
             {
                 currentState.KeyboardKeyClick(Keys.Space);
             }
@@ -227,7 +248,16 @@ namespace RiverRaid
                 }
             }
 #endif
-            currentState.Update(gameTime.ElapsedGameTime.Milliseconds, this);
+
+            if (GamePaused)
+            {
+                // do nothing
+            }
+            else
+            {
+                currentState.Update(gameTime.ElapsedGameTime.Milliseconds, this);
+                Timer.UpdateAllTimers(gameTime.ElapsedGameTime.Milliseconds);
+            }
 
             // TODO: Add your update logic here			
             base.Update(gameTime);
@@ -235,13 +265,20 @@ namespace RiverRaid
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             
             GraphicsDevice.SetRenderTarget(renderer);
-            GraphicsDevice.Clear(Color.Blue);
 
             spriteBatch.Begin();
-            currentState.Draw(spriteBatch);
+            if (GamePaused)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                spriteBatch.Draw(pauseTexture, new Rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, pauseTexture.Width, pauseTexture.Height), Color.White);
+            }
+            else
+            {
+                GraphicsDevice.Clear(Color.Blue);
+                currentState.Draw(spriteBatch);
+            }
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
@@ -265,7 +302,7 @@ namespace RiverRaid
             }
 
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             spriteBatch.Draw(renderer, rendererPosition, Color.White);
             spriteBatch.Draw(blackTile, rendererPosition, Color.White * transition_opacity);

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game\GameMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\MapLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\TileMap.cs" />
@@ -28,7 +29,6 @@
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Content\Android\Maps.txt" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Android\Textures\controllers.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Content\Android\Textures\test.bmp" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Maps.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -48,12 +48,11 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\splash.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\start_game.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\start_game_selected.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\test.bmp" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\tiles-old.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\tiles.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Content\Windows\Textures\test.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\Textures\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\Windows\Textures\" />
   </ItemGroup>
 </Project>

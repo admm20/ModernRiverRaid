@@ -28,17 +28,29 @@
 /processorParam:TextureFormat=Color
 /build:Android/Textures/controllers.png
 
-#begin Android/Textures/test.bmp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Android/Textures/test.bmp
+#begin Shared/Audio/destroy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shared/Audio/destroy.wav
+
+#begin Shared/Audio/hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shared/Audio/hit.wav
+
+#begin Shared/Audio/shot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Shared/Audio/shot.mp3
+
+#begin Shared/Audio/take_fuel.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shared/Audio/take_fuel.wav
 
 #begin Shared/Fonts/ScoreFont.spritefont
 /importer:FontDescriptionImporter
@@ -167,6 +179,18 @@
 /processorParam:TextureFormat=Color
 /build:Shared/Textures/numbers.png
 
+#begin Shared/Textures/paused_game.bmp
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shared/Textures/paused_game.bmp
+
 #begin Shared/Textures/player_bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -227,18 +251,6 @@
 /processorParam:TextureFormat=Color
 /build:Shared/Textures/start_game_selected.png
 
-#begin Shared/Textures/test.bmp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Shared/Textures/test.bmp
-
 #begin Shared/Textures/tiles.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -250,16 +262,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Shared/Textures/tiles.png
-
-#begin Windows/Textures/test.bmp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Windows/Textures/test.bmp
 

@@ -50,6 +50,13 @@ namespace RiverRaid.RaidGame
 
         Boolean fail = false;
 
+        public List<GameObject> listOfShots = new List<GameObject>();
+        public List<GameObject> listOfFuels = new List<GameObject>();
+        public List<GameObject> listOfEnemies = new List<GameObject>();
+        private bool helicopterAnimation = true;
+
+        private bool moveWorld = false;
+
 
         private void GameEvent(GameEventEnum ev)
         {
@@ -57,42 +64,125 @@ namespace RiverRaid.RaidGame
             {
                 case GameEventEnum.HIT_ENEMY:
                     fail = true;
+                    hit.Play();
+                    GameEvent(GameEventEnum.LIFE_LOST);
                     break;
                 case GameEventEnum.HIT_WALL:
                     fail = true;
+                    hit.Play();
+                    GameEvent(GameEventEnum.LIFE_LOST);
                     break;
                 case GameEventEnum.TAKE_FUEL:
                     //increase fuel
+                    take_fuel.Play();
                     break;
                 case GameEventEnum.LIFE_LOST:
                     player.lifes -= 1;
+                    player.X = -3000;
+                    moveWorld = false;
+                    if (player.lifes < 1)
+                    {
+                        GameEvent(GameEventEnum.GAME_OVER);
+                    }
+                    else
+                    {
+                        Timer loseTimer = new Timer(() => Revive(), 1500);
+                    }
                     break;
                 case GameEventEnum.GAME_OVER:
+                    Timer goToMenuDelay = new Timer(() => game.GoToMenu(), 1500);
                     break;
                 case GameEventEnum.SHOOT_ENEMY:
                     //get points
+                    player.score += 10;
+                    destroy.Play();
                     break;
                 case GameEventEnum.SHOOT_BRIDGE:
+                    player.score += 10;
+                    destroy.Play();
                     break;
             }
+        }
+
+        private void Revive()
+        {
+            tileMap.LoadFirstMap();
+            player.X = 1920 / 2;
+            player.playerYVelocity = 0.5f;
+            player.fuelLeft = 100;
+            moveWorld = true; 
+            listOfEnemies.Clear();
+            listOfFuels.Clear();
+            listOfShots.Clear();
         }
 
         public override void BlackToNormalTransitionFinished()
         {
         }
 
+        private Rectangle shootR = new Rectangle(1552, 611, 240, 240);
         public override void CursorClick(int x, int y)
         {
+#if ANDROID
+            if(shootR.Contains(x, y))
+            {
+                // pew pew
+                GameObject bullet = new GameObject(GameObjectType.SHOT, player.Position.Center.X - 13, player.Y - 15, 15, 50);
+                listOfShots.Add(bullet);
+            }
             
+                player.movingLeft = false;
+                player.movingRight = false;
+            game.GamePaused = false;
+#endif
         }
+
+        private Rectangle leftR = new Rectangle(130, 678, 120, 70);
+        private Rectangle rightR = new Rectangle(340, 678, 120, 70);
+        private Rectangle upR = new Rectangle(252, 564, 80, 110);
+        private Rectangle downR = new Rectangle(252, 756, 80, 110);
 
         public override void CursorHolding(int x, int y, int id)
         {
-            
+#if ANDROID
+            if (moveWorld)
+            {
+                if (leftR.Contains(x, y))
+                {
+                    player.movingLeft = true;
+                }
+                else
+                    player.movingLeft = false;
+
+                if (rightR.Contains(x, y))
+                {
+                    player.movingRight = true;
+                }
+                else
+                    player.movingRight = false;
+            }
+
+
+            if (upR.Contains(x, y))
+            {
+                player.playerYVelocity = 1.0f;
+            }
+            if (downR.Contains(x, y))
+            {
+                player.playerYVelocity = 0.2f;
+            }
+#endif
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
+            // in game fuels
+            foreach (GameObject o in listOfFuels)
+            {
+                spriteBatch.Draw(road_bridge_fuel, o.hitbox, new Rectangle(390, 0, o.hitbox.Width, o.hitbox.Height), Color.White);
+            }
+
             Rectangle playerPos = new Rectangle((int)player.X, (int)player.Y, 90, 120);
             if (player.movingLeft)
                 spriteBatch.Draw(player_bullet, playerPos, new Rectangle(96, 0, 95, 120), Color.White);
@@ -123,6 +213,32 @@ namespace RiverRaid.RaidGame
             }
 
 
+            // bullets
+            foreach(GameObject o in listOfShots)
+            {
+                spriteBatch.Draw(player_bullet, o.hitbox, new Rectangle(320, 36, o.hitbox.Width, o.hitbox.Height), Color.White);
+            }
+
+            foreach(GameObject o in listOfEnemies)
+            {
+                if(o.type == GameObjectType.HELICOPTER)
+                {
+                    if (helicopterAnimation)
+                    {
+                        spriteBatch.Draw(enemies, o.hitbox, new Rectangle(0, 0, o.hitbox.Width, o.hitbox.Height), Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(enemies, o.hitbox, new Rectangle(91, 0, o.hitbox.Width, o.hitbox.Height), Color.White);
+                    }
+                }
+                else if(o.type == GameObjectType.SHIP)
+                {
+                    spriteBatch.Draw(enemies, o.hitbox, new Rectangle(276, 0, o.hitbox.Width, o.hitbox.Height), Color.White);
+
+                }
+            }
+
             //*****************************
             //  INTERFACE AND CONTROLS
             //*****************************
@@ -132,12 +248,12 @@ namespace RiverRaid.RaidGame
             spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 - 160, RiverRaidGame.GAME_HEIGHT - 100,
                 fuel_rate.Width, fuel_rate.Height), new Rectangle(0,0,fuel_rate.Width - 25, fuel_rate.Height), Color.White);
             //fuel_rate
-            spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 + 148, RiverRaidGame.GAME_HEIGHT - 100,
+            spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 + 148 - (int)((100-player.fuelLeft)*2.78 ), RiverRaidGame.GAME_HEIGHT - 100,
                 25, fuel_rate.Height), new Rectangle(fuel_rate.Width - 25, 0, 25, fuel_rate.Height), Color.White);
 
-            #if ANDROID
+#if ANDROID
             spriteBatch.Draw(controllers, new Rectangle(0, 0, RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
-            #endif
+#endif
 
             string scoreString = player.score.ToString();
 
@@ -165,15 +281,11 @@ namespace RiverRaid.RaidGame
             
 
             Rectangle rectangle_y = new Rectangle(numWidth + 660, RiverRaidGame.GAME_HEIGHT - 60, numbers.Width / 10, numbers.Height);
-            spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
-
-           if (fail)
-            {
-                fail = false;
-                if (player.lifes == 3) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(1 * numWidth, 0, numWidth, numbers.Height), Color.White);
-                else if (player.lifes == 2) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(0 * numWidth, 0, numWidth, numbers.Height), Color.White);
-                else if (player.lifes == 1) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);
-            }
+            //spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
+            if (player.lifes == 3) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
+            else if (player.lifes == 2) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(1 * numWidth, 0, numWidth, numbers.Height), Color.White);
+            else if (player.lifes == 1) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(0 * numWidth, 0, numWidth, numbers.Height), Color.White);
+            else if (player.lifes == 0) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);
 
            //TODO decrease and increase fuel
 
@@ -195,28 +307,16 @@ namespace RiverRaid.RaidGame
             hit = content.Load<SoundEffect>("Shared/Audio/hit");
             take_fuel = content.Load<SoundEffect>("Shared/Audio/take_fuel");
             shot = content.Load<Song>("Shared/Audio/shot");
-            
 
 
-            
+
+
+            tileMap.LoadMaps(content);
 
             //font = content.Load<SpriteFont>("Shared/Fonts/scoreFont");
 #if ANDROID
             controllers = content.Load<Texture2D>("Android/Textures/controllers");
-            var filePath = Path.Combine(content.RootDirectory, "Android/Maps.txt");
 
-            using (var levelfile = TitleContainer.OpenStream(filePath))
-            {
-                using (var sr = new StreamReader(levelfile))
-                {
-                    var line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        Console.WriteLine(line);
-                        line = sr.ReadLine();
-                    }
-                }
-            }
 #endif
 
         }
@@ -230,14 +330,150 @@ namespace RiverRaid.RaidGame
         {
             // Reset all player's values
             // todo 
+            //player.score = 0;
+            //player.X = RiverRaidGame.GAME_WIDTH / 2;
+            //player.fuelLeft = 100;
+            //player.lifes = 3;
+            //moveWorld = false;
+            //tileMap.LoadFirstMap();
+            Revive();
+            Timer t1 = new Timer(() => { moveWorld = true; }, 1500);
+        }
+        
+        private void UpdateBulletPosition(int deltaTime)
+        {
+            for(int i = listOfShots.Count - 1; i >= 0; i--)
+            {
+                GameObject bullet = listOfShots[i];
+                bullet.y -= deltaTime * 0.9f;
+                if(bullet.y < -10)
+                {
+                    listOfShots.Remove(bullet);
+                    continue;
+                }
 
-            tileMap.LoadMaps();
-            tileMap.LoadFirstMap();
+                for (int j = listOfFuels.Count - 1; j >= 0; j--)
+                {
+                    GameObject fuel = listOfFuels[j];
+                    if (fuel.hitbox.Intersects(bullet.hitbox))
+                    {
+                        listOfFuels.Remove(fuel);
+                        listOfShots.Remove(bullet);
+                        GameEvent(GameEventEnum.SHOOT_ENEMY);
+                        continue;
+                    }
+                }
 
+                for (int j = listOfEnemies.Count - 1; j >= 0; j--)
+                {
+                    GameObject enemy = listOfEnemies[j];
+                    if (enemy.hitbox.Intersects(bullet.hitbox))
+                    {
+                        listOfEnemies.Remove(enemy);
+                        listOfShots.Remove(bullet);
+                        GameEvent(GameEventEnum.SHOOT_ENEMY);
+                        continue;
+                    }
+                }
+
+
+                for(int row = 0; row < 11; row++)
+                {
+                    for(int col = 0; col < 16; col++)
+                    {
+                        if(tileMap.TileMapArray[row, col] == 8 || tileMap.TileMapArray[row, col] == 9)
+                        {
+                            Rectangle bridgeTile = new Rectangle(col * 120, row * 120 + (int)tileMap.tileMapShift, 120, 120);
+                            if (bridgeTile.Intersects(bullet.hitbox))
+                            {
+                                GameEvent(GameEventEnum.SHOOT_BRIDGE);
+                                listOfShots.Remove(bullet);
+                                for (int x = 0; x < 16; x++)
+                                {
+                                    if (tileMap.TileMapArray[row, x] == 8 || tileMap.TileMapArray[row, x] == 9)
+                                        tileMap.TileMapArray[row, x] = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+
+        }
+
+        private int heliAnimTime = 0;
+        private void UpdateEnemyAndFuelPosition(int deltaTime)
+        {
+            heliAnimTime += deltaTime;
+            if(heliAnimTime > 200)
+            {
+                helicopterAnimation = !helicopterAnimation;
+                heliAnimTime = 0;
+            }
+
+            for (int i = listOfFuels.Count - 1; i >= 0; i--)
+            {
+                GameObject fuel = listOfFuels[i];
+                if (fuel.hitbox.Intersects(player.Position))
+                {
+                    GameEvent(GameEventEnum.TAKE_FUEL);
+                    player.fuelLeft += deltaTime * 0.08f;
+                    if (player.fuelLeft > 100)
+                        player.fuelLeft = 100;
+                }
+
+                fuel.y += deltaTime * player.playerYVelocity;
+                if (fuel.y > 1080)
+                {
+                    listOfFuels.Remove(fuel);
+                    continue;
+                }
+            }
+
+            for (int i = listOfEnemies.Count - 1; i >= 0; i--)
+            {
+                GameObject enemy = listOfEnemies[i];
+                enemy.y += deltaTime * player.playerYVelocity;
+                if (enemy.y > 1080)
+                {
+                    listOfEnemies.Remove(enemy);
+                    continue;
+                }
+                if (enemy.hitbox.Intersects(player.Position))
+                {
+                    listOfEnemies.Remove(enemy);
+                    GameEvent(GameEventEnum.HIT_ENEMY);
+                    continue;
+                }
+            }
+        }
+
+        public void CheckCollision()
+        {
+            for (int row = 5; row < 11; row++)
+            {
+                for (int col = 0; col < 16; col++)
+                {
+                    int tileId = tileMap.TileMapArray[row, col];
+                    if ((tileId > 0 &&  tileId < 3) || (tileId > 6 && tileId < 10))
+                    {
+                        Rectangle tile = new Rectangle(col * 120, (row-1) * 120 + (int)tileMap.tileMapShift, 120, 120);
+                        if (tile.Intersects(player.Position))
+                        {
+                            GameEvent(GameEventEnum.HIT_WALL);
+                        }
+                    }
+                }
+            }
         }
 
         public override void Update(int deltaTime, RiverRaidGame game)
         {
+            if (!moveWorld)
+                return;
             if (player.movingLeft)
             {
                 player.X -= deltaTime * 0.7f;
@@ -251,34 +487,66 @@ namespace RiverRaid.RaidGame
                 player.movingLeft = false;
             if (game.previousKeyboardState.IsKeyUp(Keys.Right))
                 player.movingRight = false;
+#elif ANDROID
+
 #endif
 
-            tileMap.UpdateTilePosition(deltaTime, player.playerXVelocity);
+            tileMap.UpdateTilePosition(deltaTime, player.playerYVelocity, this);
+            UpdateBulletPosition(deltaTime);
+            UpdateEnemyAndFuelPosition(deltaTime);
+            CheckCollision();
+            
+            player.playerYVelocity = 0.5f;
+            player.fuelLeft -= 0.008f * deltaTime;
+            if (player.fuelLeft < 0)
+            {
+                hit.Play();
+                GameEvent(GameEventEnum.LIFE_LOST);
+            }
         }
 
         public override void KeyboardKeyDown(Keys key)
         {
-            if (key == Keys.Left)
+            if (moveWorld)
             {
-                player.movingLeft = true;
+                if (key == Keys.Left)
+                {
+                    player.movingLeft = true;
+                }
+
+                if (key == Keys.Right)
+                {
+                    player.movingRight = true;
+                }
+
+            }
+            
+            if (key == Keys.Up)
+            {
+                player.playerYVelocity = 1.0f;
+            }
+            if (key == Keys.Down)
+            {
+                player.playerYVelocity = 0.2f;
             }
 
-            if (key == Keys.Right)
-            {
-                player.movingRight = true;
-            }
+            
         }
 
         public override void KeyboardKeyClick(Keys key)
         {
-            /*
+            
             if (key == Keys.P)
             {
-                if (game.GamePaused)
-                    game.ResumeGame();
-                else
-                    game.PauseGame();
-            }*/
+                game.GamePaused = !game.GamePaused;
+            }
+
+            if(key == Keys.Space)
+            {
+                GameObject bullet = new GameObject(GameObjectType.SHOT, player.Position.Center.X - 13, player.Y - 15, 15, 50);
+                listOfShots.Add(bullet);
+                MediaPlayer.Play(shot);
+            }
         }
 
         public GameMode(RiverRaidGame game)

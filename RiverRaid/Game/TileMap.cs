@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Content;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,9 +32,9 @@ namespace RiverRaid.RaidGame
         private SingleMap currentMap;
         private int tilePassedCounter = 8;
 
-        public void LoadMaps()
+        public void LoadMaps(ContentManager content)
         {
-            mapLoader.LoadMaps();
+            mapLoader.LoadMaps(content);
         }
 
         // TYLKO od 0 do 9 !!!
@@ -44,6 +45,7 @@ namespace RiverRaid.RaidGame
 
         public void LoadFirstMap()
         {
+            tileMapShift = 0;
             currentMap = mapLoader.Maps[0];
             for (int row = 0; row < 9; row++)
             {
@@ -54,7 +56,7 @@ namespace RiverRaid.RaidGame
             }
         }
 
-        public void UpdateTilePosition(int deltaTime, float playerXVelocity)
+        public void UpdateTilePosition(int deltaTime, float playerXVelocity, GameMode gameMode)
         {
             float tempShift = tileMapShift + deltaTime * playerXVelocity;
             if (tempShift > 400.0f)
@@ -64,7 +66,7 @@ namespace RiverRaid.RaidGame
             else if (tempShift > 120.0f)
             {
                 // przesun wszystko o 1 w dol
-                MoveTilesDown();
+                MoveTilesDown(gameMode);
                 tileMapShift = tempShift - 120.0f;
             }
             else
@@ -72,7 +74,7 @@ namespace RiverRaid.RaidGame
 
         }
 
-        private void MoveTilesDown()
+        private void MoveTilesDown(GameMode gameMode)
         {
             for(int row = 10; row > 0; row--)
             {
@@ -84,6 +86,8 @@ namespace RiverRaid.RaidGame
 
             tilePassedCounter++;
 
+            Random rand = new Random();
+
             // find other matching map
             if (tilePassedCounter > 8)
             {
@@ -93,18 +97,38 @@ namespace RiverRaid.RaidGame
                     if (currentMap.lines[0] == map.lines[8])
                         matchingMaps.Add(map);
                 }
-
-                Random rand = new Random();
-                int r = rand.Next(0, matchingMaps.Count);
                 
-                Console.WriteLine("LOSOWANKO: " + r);
+                int r = rand.Next(0, matchingMaps.Count);
+                while(currentMap == matchingMaps[r])
+                    r = rand.Next(0, matchingMaps.Count);
                 currentMap = matchingMaps[r];
 
                 tilePassedCounter = 0;
             }
+
+
             for (int col = 0; col < 16; col++)
             {
                 TileMapArray[0, col] = CharToInt(currentMap.lines[8 - tilePassedCounter][col]);
+
+                int r = rand.Next(0, 100);
+                if (r == 2 && TileMapArray[0, col] == 0)
+                {
+                    // generuj paliwo
+                    GameObject fuel = new GameObject(GameObjectType.FUEL, col * 120 + 15, -120, 65, 120);
+                    gameMode.listOfFuels.Add(fuel);
+                }
+                else if(r == 3 && TileMapArray[0, col] == 0)
+                {
+                    GameObject ship = new GameObject(GameObjectType.SHIP, col * 120 + 15, -120, 124, 120);
+                    gameMode.listOfEnemies.Add(ship);
+                }
+                else if (r == 4 && TileMapArray[0, col] == 0)
+                {
+                    GameObject heli = new GameObject(GameObjectType.HELICOPTER, col * 120 + 15, -120, 90, 120);
+                    gameMode.listOfEnemies.Add(heli);
+                }
+
             }
 
         }
