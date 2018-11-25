@@ -234,7 +234,10 @@ namespace RiverRaid
                 // do nothing
             }
             else
+            {
                 currentState.Update(gameTime.ElapsedGameTime.Milliseconds, this);
+                Timer.UpdateAllTimers(gameTime.ElapsedGameTime.Milliseconds);
+            }
 
             // TODO: Add your update logic here			
             base.Update(gameTime);

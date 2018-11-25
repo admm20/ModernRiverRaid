@@ -72,7 +72,9 @@ namespace RiverRaid.RaidGame
 
             tileMap.LoadMaps();
             tileMap.LoadFirstMap();
-
+            Timer t1 = new Timer(() => { Console.WriteLine("xd"); }, 1000);
+            Timer t2 = new Timer(() => { Console.WriteLine("xD"); }, 2000);
+            Timer t3 = new Timer(() => { Console.WriteLine("XDDD"); }, 3000);
         }
 
         public override void Update(int deltaTime, RiverRaidGame game)
