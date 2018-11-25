@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Android/Maps.txt
+/copy:Android/Maps.txt
+
 #begin Android/Textures/controllers.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -19,8 +19,10 @@ namespace RiverRaidAndroid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
             var g = new RiverRaid.RiverRaidGame();
             SetContentView((View)g.Services.GetService(typeof(View)));
+            
             g.Run();
         }
     }

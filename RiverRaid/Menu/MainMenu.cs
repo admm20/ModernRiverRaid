@@ -7,6 +7,7 @@ using Android.OS;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace RiverRaid.Menu
 {
@@ -38,7 +39,7 @@ namespace RiverRaid.Menu
         {
             if (!dozmiany)
             {
-                game.NormalToBlackTransition(); 
+                game.BlackToNormalTransition(); 
                 game.GoToGameMode();
             }
         }
@@ -62,8 +63,9 @@ namespace RiverRaid.Menu
                 case 0:
                     break;
                 case 1:
-                    NormalToBlackTransitionFinished(false);
-                    game.BlackToNormalTransition();
+                    //NormalToBlackTransitionFinished(false);
+                    //game.BlackToNormalTransition
+                    game.NormalToBlackTransition();
                     break;
                 case 2:
 #if WINDOWS
@@ -136,6 +138,16 @@ namespace RiverRaid.Menu
             // pc
             position_x = game.mouse_x;
             position_y = game.mouse_y;
+
+        }
+
+        public override void KeyboardKeyDown(Keys key)
+        {
+
+        }
+
+        public override void KeyboardKeyClick(Keys key)
+        {
 
         }
 

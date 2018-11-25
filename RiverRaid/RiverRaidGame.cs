@@ -42,7 +42,8 @@ namespace RiverRaid
 
 #if WINDOWS
         private MouseState previousMouseState;
-        
+        public KeyboardState previousKeyboardState;
+
 #endif
 
         // przejscie z ciemnego ekranu w jasny
@@ -65,17 +66,18 @@ namespace RiverRaid
 
         public void GoToMenu()
         {
-           
-            this.mainMenu.OnEnter();
             currentState = mainMenu;
+            currentState.OnEnter();
         }
 
         public void GoToGameMode()
         {
-            
-            this.game.OnEnter();
+
             currentState = game;
+            currentState.OnEnter();
         }
+
+
 
         public RiverRaidGame()
         {
@@ -93,7 +95,8 @@ namespace RiverRaid
 #endif
             mainMenu = new MainMenu(this);
             game = new GameMode(this);
-            GoToMenu();
+            //GoToMenu();
+            GoToGameMode();
         }
 
         protected override void Initialize()
@@ -180,6 +183,28 @@ namespace RiverRaid
                 }
             }
             previousMouseState = mouseStateNow;
+
+            KeyboardState keyboardStateNow = Keyboard.GetState();
+            if (keyboardStateNow.GetPressedKeys().Length > 0)
+            {
+                foreach (Keys k in keyboardStateNow.GetPressedKeys())
+                {
+                    currentState.KeyboardKeyDown(k);
+
+                }
+
+            }
+            if (keyboardStateNow.IsKeyUp(Keys.P) && previousKeyboardState.IsKeyDown(Keys.P))
+            {
+                currentState.KeyboardKeyClick(Keys.P);
+            }
+
+            if (keyboardStateNow.IsKeyUp(Keys.Space) && keyboardStateNow.IsKeyDown(Keys.Space))
+            {
+                currentState.KeyboardKeyClick(Keys.Space);
+            }
+            previousKeyboardState = keyboardStateNow;
+
 #elif ANDROID
             TouchCollection touches = TouchPanel.GetState();
 

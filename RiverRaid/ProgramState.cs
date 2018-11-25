@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,5 +27,13 @@ namespace RiverRaid
 
         // wywoływana gdy z ciemnego ekranu zrobił się w 100% jasny
         public abstract void BlackToNormalTransitionFinished();
+
+        // TYLKO DLA WINDOWSA:
+
+        // przycisk key jest trzymany
+        public abstract void KeyboardKeyDown(Keys key);
+
+        // przycisk zostal klikniety (wcisniety i puszczony) (tylko P i spacja)
+        public abstract void KeyboardKeyClick(Keys key);
     }
 }

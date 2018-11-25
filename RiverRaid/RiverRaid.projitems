@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game\GameMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\MapLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\TileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Menu\MainMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProgramState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RiverRaidGame.cs" />
@@ -20,5 +23,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\Shared\Fonts\ScoreFont.spritefont" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\Android\Maps.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Android\Textures\controllers.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Android\Textures\test.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Maps.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\black_tile.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\bottom.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\enemies.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\exit.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\exit_selected.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\explosions.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\fuel_rate.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\icon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\menu.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\numbers.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\player_bullet-old.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\player_bullet.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\road_bridge_fuel.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\splash.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\start_game.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\start_game_selected.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\test.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\tiles-old.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Shared\Textures\tiles.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Windows\Textures\test.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\Textures\" />
   </ItemGroup>
 </Project>

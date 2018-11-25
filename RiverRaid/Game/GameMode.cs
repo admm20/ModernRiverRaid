@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace RiverRaid.RaidGame
 {
     class GameMode : ProgramState
     {
         private RiverRaidGame game;
+
+        private TileMap tileMap = new TileMap();
+
+        private Player player = new Player();
 
         private Texture2D enemies;
         private Texture2D explosions;
@@ -42,6 +47,39 @@ namespace RiverRaid.RaidGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            Rectangle playerPos = new Rectangle((int)player.X, (int)player.Y, 90, 120);
+            if (player.movingLeft)
+                spriteBatch.Draw(player_bullet, playerPos, new Rectangle(96, 0, 95, 120), Color.White);
+            else if (player.movingRight)
+                spriteBatch.Draw(player_bullet, playerPos, new Rectangle(96+96, 0, 95, 120), Color.White);
+            else
+                spriteBatch.Draw(player_bullet, playerPos, new Rectangle(0, 0, 95, 120), Color.White);
+
+            for (int row = 0; row < 11; row++)
+            {
+                for (int col = 0; col < 16; col++)
+                {
+                    int currentTile = tileMap.TileMapArray[row, col];
+                    if(currentTile > 0)
+                    {
+                        Rectangle location = new Rectangle(col * 120, (row-1) * 120 + (int)tileMap.tileMapShift, 120, 120);
+                        if (currentTile < 7)
+                        {
+                            spriteBatch.Draw(tiles, location, new Rectangle((currentTile - 1) * 120, 0, 120, 120), Color.White);
+                        }
+                        else if(currentTile <= 9)
+                        {
+                            spriteBatch.Draw(road_bridge_fuel, location, new Rectangle((currentTile - 7) * 120, 0, 120, 120), Color.White);
+                        }
+
+                    }
+                }
+            }
+
+
+            //*****************************
+            //  INTERFACE AND CONTROLS
+            //*****************************
             spriteBatch.Draw(bottom, new Rectangle(0, RiverRaidGame.GAME_HEIGHT - 180, 
                 RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
             spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 - 160, RiverRaidGame.GAME_HEIGHT - 100,
@@ -112,7 +150,22 @@ namespace RiverRaid.RaidGame
             controllers = content.Load<Texture2D>("Android/Textures/controllers");
 
             //font = content.Load<SpriteFont>("Shared/Fonts/scoreFont");
+#if ANDROID
+            var filePath = Path.Combine(content.RootDirectory, "Android/Maps.txt");
 
+            using (var levelfile = TitleContainer.OpenStream(filePath))
+            {
+                using (var sr = new StreamReader(levelfile))
+                {
+                    var line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        Console.WriteLine(line);
+                        line = sr.ReadLine();
+                    }
+                }
+            }
+#endif
 
         }
 
@@ -123,12 +176,57 @@ namespace RiverRaid.RaidGame
 
         public override void OnEnter()
         {
-            
+            // Reset all player's values
+            // todo 
+
+            tileMap.LoadMaps();
+            tileMap.LoadFirstMap();
+
         }
 
         public override void Update(int deltaTime, RiverRaidGame game)
         {
-            
+            if (player.movingLeft)
+            {
+                player.X -= deltaTime * 0.7f;
+            }
+            else if (player.movingRight)
+            {
+                player.X += deltaTime * 0.7f;
+            }
+#if WINDOWS
+            if (game.previousKeyboardState.IsKeyUp(Keys.Left))
+                player.movingLeft = false;
+            if (game.previousKeyboardState.IsKeyUp(Keys.Right))
+                player.movingRight = false;
+#endif
+
+            tileMap.UpdateTilePosition(deltaTime, player.playerXVelocity);
+        }
+
+        public override void KeyboardKeyDown(Keys key)
+        {
+            if (key == Keys.Left)
+            {
+                player.movingLeft = true;
+            }
+
+            if (key == Keys.Right)
+            {
+                player.movingRight = true;
+            }
+        }
+
+        public override void KeyboardKeyClick(Keys key)
+        {
+            /*
+            if (key == Keys.P)
+            {
+                if (game.GamePaused)
+                    game.ResumeGame();
+                else
+                    game.PauseGame();
+            }*/
         }
 
         public GameMode(RiverRaidGame game)
