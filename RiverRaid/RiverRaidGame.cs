@@ -102,8 +102,7 @@ namespace RiverRaid
 
         protected override void Initialize()
         {
-
-            Console.WriteLine(GraphicsDevice.PresentationParameters.BackBufferWidth);
+            
             // TODO: Add your initialization logic here
 
 #if WINDOWS
@@ -132,8 +131,8 @@ namespace RiverRaid
             game.LoadContent(Content);
             mainMenu.LoadContent(Content);
 
-            //GoToMenu();
-            GoToGameMode();
+            GoToMenu();
+            //GoToGameMode();
         }
 
         private bool backPressed = false;

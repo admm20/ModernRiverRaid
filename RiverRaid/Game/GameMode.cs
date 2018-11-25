@@ -337,6 +337,9 @@ namespace RiverRaid.RaidGame
             //moveWorld = false;
             //tileMap.LoadFirstMap();
             Revive();
+            moveWorld = false;
+            player.lifes = 3;
+            player.score = 0;
             Timer t1 = new Timer(() => { moveWorld = true; }, 1500);
         }
         
