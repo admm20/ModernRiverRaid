@@ -12,7 +12,7 @@ namespace RiverRaid.RaidGame
         //public float accelerationX = 0.0f;
         //public float accelerationY = 0.0f;
 
-        public float playerXVelocity = 0.35f;
+        public float playerXVelocity = 2f;// 0.35f;
 
         public bool movingLeft = false;
         public bool movingRight = false;

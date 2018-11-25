@@ -84,53 +84,32 @@ namespace RiverRaid.RaidGame
                 RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
             spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 - 160, RiverRaidGame.GAME_HEIGHT - 100,
                 fuel_rate.Width, fuel_rate.Height), new Rectangle(0,0,fuel_rate.Width - 25, fuel_rate.Height), Color.White);
+
+            #if ANDROID
             spriteBatch.Draw(controllers, new Rectangle(0, 0, RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
+            #endif
+
             string scoreString = score.ToString();
 
             for (int i = 0; i < scoreString.Length; i++)
             {
+                Rectangle rect_y = new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width/10,
+                    RiverRaidGame.GAME_HEIGHT - 160, numbers.Width/10, numbers.Height);
+                int numWidth = numbers.Width / 10;
+
+
                 switch(scoreString[i])
                 {
-                    case '0':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width/10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width/10, numbers.Height),
-                            new Rectangle(9 * numbers.Width/10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '1':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(0, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '2':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width/10, numbers.Height),
-                            new Rectangle(1 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '3':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(2 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '4':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(3 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '5':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(4 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '6':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(5 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '7':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(6 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '8':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(7 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
-                    case '9':
-                        spriteBatch.Draw(numbers, new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width / 10, RiverRaidGame.GAME_HEIGHT - 160, numbers.Width / 10, numbers.Height),
-                            new Rectangle(8 * numbers.Width / 10, 0, numbers.Width / 10, numbers.Height), Color.White);
-                        break;
+                    case '0':spriteBatch.Draw(numbers, rect_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '1':spriteBatch.Draw(numbers, rect_y, new Rectangle(0 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '2':spriteBatch.Draw(numbers, rect_y, new Rectangle(1 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '3':spriteBatch.Draw(numbers, rect_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '4':spriteBatch.Draw(numbers, rect_y, new Rectangle(3 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '5':spriteBatch.Draw(numbers, rect_y, new Rectangle(4 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '6':spriteBatch.Draw(numbers, rect_y, new Rectangle(5 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '7':spriteBatch.Draw(numbers, rect_y, new Rectangle(6 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '8':spriteBatch.Draw(numbers, rect_y, new Rectangle(7 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
+                    case '9':spriteBatch.Draw(numbers, rect_y, new Rectangle(8 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
                 }
             }
             
@@ -147,10 +126,11 @@ namespace RiverRaid.RaidGame
             tiles = content.Load<Texture2D>("Shared/Textures/tiles");
             bottom = content.Load<Texture2D>("Shared/Textures/bottom");
 
-            controllers = content.Load<Texture2D>("Android/Textures/controllers");
+            
 
             //font = content.Load<SpriteFont>("Shared/Fonts/scoreFont");
 #if ANDROID
+            controllers = content.Load<Texture2D>("Android/Textures/controllers");
             var filePath = Path.Combine(content.RootDirectory, "Android/Maps.txt");
 
             using (var levelfile = TitleContainer.OpenStream(filePath))
