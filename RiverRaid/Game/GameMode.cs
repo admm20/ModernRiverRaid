@@ -129,6 +129,7 @@ namespace RiverRaid.RaidGame
                 // pew pew
                 GameObject bullet = new GameObject(GameObjectType.SHOT, player.Position.Center.X - 13, player.Y - 15, 15, 50);
                 listOfShots.Add(bullet);
+                MediaPlayer.Play(shot);
             }
             
                 player.movingLeft = false;
@@ -137,10 +138,15 @@ namespace RiverRaid.RaidGame
 #endif
         }
 
-        private Rectangle leftR = new Rectangle(130, 678, 120, 70);
-        private Rectangle rightR = new Rectangle(340, 678, 120, 70);
-        private Rectangle upR = new Rectangle(252, 564, 80, 110);
-        private Rectangle downR = new Rectangle(252, 756, 80, 110);
+        //private Rectangle leftR = new Rectangle(130, 678, 120, 70);
+        //private Rectangle rightR = new Rectangle(340, 678, 120, 70);
+        //private Rectangle upR = new Rectangle(252, 564, 80, 110);
+        //private Rectangle downR = new Rectangle(252, 756, 80, 110);
+
+        private Rectangle leftR = new Rectangle(0, 678 - 30, 270, 160);
+        private Rectangle rightR = new Rectangle(360, 678 - 30, 270, 160);
+        private Rectangle upR = new Rectangle(252 - 10, 564 - 120, 100, 250);
+        private Rectangle downR = new Rectangle(252 - 10, 756 + 20, 100, 250);
 
         public override void CursorHolding(int x, int y, int id)
         {
