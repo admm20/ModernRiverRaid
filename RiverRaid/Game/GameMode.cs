@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace RiverRaid.RaidGame
 {
     class GameMode : ProgramState
     {
+
+        public enum GameEventEnum
+        {
+            HIT_ENEMY,
+            HIT_WALL,
+            TAKE_FUEL,
+            LIFE_LOST,
+            GAME_OVER,
+            SHOOT_ENEMY,
+            SHOOT_BRIDGE
+        }
+
         private RiverRaidGame game;
 
         private TileMap tileMap = new TileMap();
@@ -27,9 +41,41 @@ namespace RiverRaid.RaidGame
         private Texture2D controllers;
         private Texture2D bottom;
 
+        private SoundEffect destroy;
+        private SoundEffect hit;
+        private SoundEffect take_fuel;
+        private Song shot;
+
         private SpriteFont font;
 
-        private int score = 15309;
+        Boolean fail = false;
+
+
+        private void GameEvent(GameEventEnum ev)
+        {
+            switch (ev)
+            {
+                case GameEventEnum.HIT_ENEMY:
+                    fail = true;
+                    break;
+                case GameEventEnum.HIT_WALL:
+                    fail = true;
+                    break;
+                case GameEventEnum.TAKE_FUEL:
+                    //increase fuel
+                    break;
+                case GameEventEnum.LIFE_LOST:
+                    player.lifes -= 1;
+                    break;
+                case GameEventEnum.GAME_OVER:
+                    break;
+                case GameEventEnum.SHOOT_ENEMY:
+                    //get points
+                    break;
+                case GameEventEnum.SHOOT_BRIDGE:
+                    break;
+            }
+        }
 
         public override void BlackToNormalTransitionFinished()
         {
@@ -82,22 +128,25 @@ namespace RiverRaid.RaidGame
             //*****************************
             spriteBatch.Draw(bottom, new Rectangle(0, RiverRaidGame.GAME_HEIGHT - 180, 
                 RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
+            //fuel
             spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 - 160, RiverRaidGame.GAME_HEIGHT - 100,
                 fuel_rate.Width, fuel_rate.Height), new Rectangle(0,0,fuel_rate.Width - 25, fuel_rate.Height), Color.White);
+            //fuel_rate
+            spriteBatch.Draw(fuel_rate, new Rectangle(RiverRaidGame.GAME_WIDTH / 2 + 148, RiverRaidGame.GAME_HEIGHT - 100,
+                25, fuel_rate.Height), new Rectangle(fuel_rate.Width - 25, 0, 25, fuel_rate.Height), Color.White);
 
             #if ANDROID
             spriteBatch.Draw(controllers, new Rectangle(0, 0, RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
             #endif
 
-            string scoreString = score.ToString();
+            string scoreString = player.score.ToString();
 
+            int numWidth = numbers.Width / 10;
             for (int i = 0; i < scoreString.Length; i++)
             {
-                Rectangle rect_y = new Rectangle(i * numbers.Width / 10 + 1150 - scoreString.Length * numbers.Width/10,
-                    RiverRaidGame.GAME_HEIGHT - 160, numbers.Width/10, numbers.Height);
-                int numWidth = numbers.Width / 10;
-
-
+                
+                Rectangle rect_y = new Rectangle(i * numWidth + 1150 - scoreString.Length * numWidth, RiverRaidGame.GAME_HEIGHT - 160, numWidth, numbers.Height);
+                
                 switch(scoreString[i])
                 {
                     case '0':spriteBatch.Draw(numbers, rect_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
@@ -112,7 +161,22 @@ namespace RiverRaid.RaidGame
                     case '9':spriteBatch.Draw(numbers, rect_y, new Rectangle(8 * numWidth, 0, numWidth, numbers.Height), Color.White);break;
                 }
             }
+
             
+
+            Rectangle rectangle_y = new Rectangle(numWidth + 660, RiverRaidGame.GAME_HEIGHT - 60, numbers.Width / 10, numbers.Height);
+            spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
+
+           if (fail)
+            {
+                fail = false;
+                if (player.lifes == 3) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(1 * numWidth, 0, numWidth, numbers.Height), Color.White);
+                else if (player.lifes == 2) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(0 * numWidth, 0, numWidth, numbers.Height), Color.White);
+                else if (player.lifes == 1) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);
+            }
+
+           //TODO decrease and increase fuel
+
         }
 
         public override void LoadContent(ContentManager content)
@@ -125,6 +189,14 @@ namespace RiverRaid.RaidGame
             road_bridge_fuel = content.Load<Texture2D>("Shared/Textures/road_bridge_fuel");
             tiles = content.Load<Texture2D>("Shared/Textures/tiles");
             bottom = content.Load<Texture2D>("Shared/Textures/bottom");
+
+
+            destroy = content.Load<SoundEffect>("Shared/Audio/destroy");
+            hit = content.Load<SoundEffect>("Shared/Audio/hit");
+            take_fuel = content.Load<SoundEffect>("Shared/Audio/take_fuel");
+            shot = content.Load<Song>("Shared/Audio/shot");
+            
+
 
             
 

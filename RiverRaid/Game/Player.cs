@@ -12,7 +12,7 @@ namespace RiverRaid.RaidGame
         //public float accelerationX = 0.0f;
         //public float accelerationY = 0.0f;
 
-        public float playerXVelocity = 2f;// 0.35f;
+        public float playerXVelocity = 0.5f;// 0.35f;
 
         public bool movingLeft = false;
         public bool movingRight = false;
@@ -23,7 +23,7 @@ namespace RiverRaid.RaidGame
         public bool canShoot = true;
 
         public int lifes = 3;
-        public int score = 0;
+        public int score = 33170;
 
     }
 }
