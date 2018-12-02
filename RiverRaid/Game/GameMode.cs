@@ -134,12 +134,13 @@ namespace RiverRaid.RaidGame
                 controls.move = new Vector2(0, 0);
             }
 
-            if(controls.shotPosition.Contains(x, y))
+            if(moveWorld && controls.shotPosition.Contains(x, y))
             {
                 // pew pew
                 GameObject bullet = new GameObject(GameObjectType.SHOT, player.Position.Center.X - 13, player.Y - 15, 15, 50);
                 listOfShots.Add(bullet);
-                MediaPlayer.Play(shot);
+                //MediaPlayer.Play(shot);
+                destroy.Play();
             }
             game.GamePaused = false;
             controls.shotOpacity = 0.7f;
