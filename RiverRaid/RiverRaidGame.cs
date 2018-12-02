@@ -201,7 +201,7 @@ namespace RiverRaid
                 currentState.CursorHolding(mouse_x, mouse_y, 0);
                 if(mouseStateNow.LeftButton == ButtonState.Released)
                 {
-                    currentState.CursorClick(mouse_x, mouse_y);
+                    currentState.CursorClick(mouse_x, mouse_y, -2);
                 }
             }
             previousMouseState = mouseStateNow;

@@ -163,33 +163,6 @@ namespace RiverRaid.RaidGame
             {
                 controls.shotOpacity = 1.0f;
             }
-
-            //if (moveWorld)
-            //{
-            //    if (leftR.Contains(x, y))
-            //    {
-            //        player.movingLeft = true;
-            //    }
-            //    else
-            //        player.movingLeft = false;
-
-            //    if (rightR.Contains(x, y))
-            //    {
-            //        player.movingRight = true;
-            //    }
-            //    else
-            //        player.movingRight = false;
-            //}
-
-
-            //if (upR.Contains(x, y))
-            //{
-            //    player.playerYVelocity = 1.0f;
-            //}
-            //if (downR.Contains(x, y))
-            //{
-            //    player.playerYVelocity = 0.2f;
-            //}
 #endif
         }
 
@@ -351,14 +324,6 @@ namespace RiverRaid.RaidGame
 
         public override void OnEnter()
         {
-            // Reset all player's values
-            // todo 
-            //player.score = 0;
-            //player.X = RiverRaidGame.GAME_WIDTH / 2;
-            //player.fuelLeft = 100;
-            //player.lifes = 3;
-            //moveWorld = false;
-            //tileMap.LoadFirstMap();
             controls.Reset();
             Revive();
             moveWorld = false;
@@ -464,12 +429,15 @@ namespace RiverRaid.RaidGame
             {
                 GameObject enemy = listOfEnemies[i];
                 enemy.y += deltaTime * player.playerYVelocity;
+                Rectangle hitbox = enemy.hitbox;
+                hitbox.Y += 45;
+                hitbox.Height -= 80;
                 if (enemy.y > 1080)
                 {
                     listOfEnemies.Remove(enemy);
                     continue;
                 }
-                if (enemy.hitbox.Intersects(player.Position))
+                if (hitbox.Intersects(player.Position))
                 {
                     listOfEnemies.Remove(enemy);
                     GameEvent(GameEventEnum.HIT_ENEMY);
