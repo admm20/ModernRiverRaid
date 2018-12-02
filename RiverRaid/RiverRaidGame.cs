@@ -34,6 +34,7 @@ namespace RiverRaid
         private Texture2D pauseTexture;
 
         private RenderTarget2D renderer;
+        private Rectangle rendererPosition = new Rectangle(0, 0, 1, 1);
 
         private float transition_opacity = 0.0f;
         private int transition_timer = 0;
@@ -196,6 +197,7 @@ namespace RiverRaid
             mouse_y = (int)(mouseStateNow.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
             if (previousMouseState.LeftButton == ButtonState.Pressed)
             {
+                Console.WriteLine(mouse_x);
                 currentState.CursorHolding(mouse_x, mouse_y, 0);
                 if(mouseStateNow.LeftButton == ButtonState.Released)
                 {
@@ -230,19 +232,25 @@ namespace RiverRaid
 
             foreach(TouchLocation touch in touches)
             {
-                int touch_x = (int)(touch.Position.X * ((float)GAME_WIDTH / GraphicsDevice.PresentationParameters.BackBufferWidth));
-                int touch_y = (int)(touch.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
+                //int touch_x = (int)(touch.Position.X * ((float)GAME_WIDTH / GraphicsDevice.PresentationParameters.BackBufferWidth));
+                //int touch_y = (int)(touch.Position.Y * ((float)GAME_HEIGHT / GraphicsDevice.PresentationParameters.BackBufferHeight));
+                // lepszy sposob:
+                float touch_x = (float)((touch.Position.X - rendererPosition.X) / rendererPosition.Width);
+                float touch_y = (float)((touch.Position.Y - rendererPosition.Y) / rendererPosition.Height);
+                touch_x *= GAME_WIDTH;
+                touch_y *= GAME_HEIGHT;
+
                 switch (touch.State)
                 {
                     case TouchLocationState.Invalid:
                         break;
                     case TouchLocationState.Moved:
-                        currentState.CursorHolding(touch_x, touch_y, touch.Id);
+                        currentState.CursorHolding((int)touch_x, (int)touch_y, touch.Id);
                         break;
                     case TouchLocationState.Pressed:
                         break;
                     case TouchLocationState.Released:
-                        currentState.CursorClick(touch_x, touch_y);
+                        currentState.CursorClick((int)touch_x, (int)touch_y, touch.Id);
                         break;
                 }
             }
@@ -285,7 +293,7 @@ namespace RiverRaid
             // Obraz będzie wyświetlany na środku ekranu i będą zachowane proporcje niezaleznie od tego,
             // jakie są wymiary okna.
             PresentationParameters windowSize = GraphicsDevice.PresentationParameters;
-            Rectangle rendererPosition = new Rectangle(0, 0, windowSize.BackBufferWidth,
+            rendererPosition = new Rectangle(0, 0, windowSize.BackBufferWidth,
                 windowSize.BackBufferHeight);
 
 

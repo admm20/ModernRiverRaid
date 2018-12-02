@@ -46,6 +46,9 @@ namespace RiverRaid.RaidGame
         private SoundEffect take_fuel;
         private Song shot;
 
+        private Controls controls = new Controls();
+
+
         private SpriteFont font;
 
         Boolean fail = false;
@@ -106,6 +109,7 @@ namespace RiverRaid.RaidGame
 
         private void Revive()
         {
+
             tileMap.LoadFirstMap();
             player.X = 1920 / 2;
             player.playerYVelocity = 0.5f;
@@ -119,64 +123,73 @@ namespace RiverRaid.RaidGame
         public override void BlackToNormalTransitionFinished()
         {
         }
-
-        private Rectangle shootR = new Rectangle(1552, 611, 240, 240);
-        public override void CursorClick(int x, int y)
+        
+        public override void CursorClick(int x, int y, int id)
         {
 #if ANDROID
-            if(shootR.Contains(x, y))
+            if(id == controls.touchId)
+            {
+                controls.touchId = -1;
+                controls.padPosition = new Rectangle(50, 600, 350, 350);
+                controls.move = new Vector2(0, 0);
+            }
+
+            if(controls.shotPosition.Contains(x, y))
             {
                 // pew pew
                 GameObject bullet = new GameObject(GameObjectType.SHOT, player.Position.Center.X - 13, player.Y - 15, 15, 50);
                 listOfShots.Add(bullet);
                 MediaPlayer.Play(shot);
             }
-            
-                player.movingLeft = false;
-                player.movingRight = false;
             game.GamePaused = false;
+            controls.shotOpacity = 0.7f;
 #endif
         }
-
-        //private Rectangle leftR = new Rectangle(130, 678, 120, 70);
-        //private Rectangle rightR = new Rectangle(340, 678, 120, 70);
-        //private Rectangle upR = new Rectangle(252, 564, 80, 110);
-        //private Rectangle downR = new Rectangle(252, 756, 80, 110);
-
-        private Rectangle leftR = new Rectangle(0, 678 - 30, 270, 160);
-        private Rectangle rightR = new Rectangle(360, 678 - 30, 270, 160);
-        private Rectangle upR = new Rectangle(252 - 10, 564 - 120, 100, 250);
-        private Rectangle downR = new Rectangle(252 - 10, 756 + 20, 100, 250);
 
         public override void CursorHolding(int x, int y, int id)
         {
 #if ANDROID
-            if (moveWorld)
+            if(controls.padPosition.Contains(x, y))
             {
-                if (leftR.Contains(x, y))
-                {
-                    player.movingLeft = true;
-                }
-                else
-                    player.movingLeft = false;
-
-                if (rightR.Contains(x, y))
-                {
-                    player.movingRight = true;
-                }
-                else
-                    player.movingRight = false;
+                controls.touchId = id;
             }
 
+            if(controls.touchId == id)
+            {
+                controls.MovePad(x, y);
+            }
 
-            if (upR.Contains(x, y))
+            if(controls.shotPosition.Contains(x, y))
             {
-                player.playerYVelocity = 1.0f;
+                controls.shotOpacity = 1.0f;
             }
-            if (downR.Contains(x, y))
-            {
-                player.playerYVelocity = 0.2f;
-            }
+
+            //if (moveWorld)
+            //{
+            //    if (leftR.Contains(x, y))
+            //    {
+            //        player.movingLeft = true;
+            //    }
+            //    else
+            //        player.movingLeft = false;
+
+            //    if (rightR.Contains(x, y))
+            //    {
+            //        player.movingRight = true;
+            //    }
+            //    else
+            //        player.movingRight = false;
+            //}
+
+
+            //if (upR.Contains(x, y))
+            //{
+            //    player.playerYVelocity = 1.0f;
+            //}
+            //if (downR.Contains(x, y))
+            //{
+            //    player.playerYVelocity = 0.2f;
+            //}
 #endif
         }
 
@@ -258,7 +271,10 @@ namespace RiverRaid.RaidGame
                 25, fuel_rate.Height), new Rectangle(fuel_rate.Width - 25, 0, 25, fuel_rate.Height), Color.White);
 
 #if ANDROID
-            spriteBatch.Draw(controllers, new Rectangle(0, 0, RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
+            //spriteBatch.Draw(controllers, new Rectangle(0, 0, RiverRaidGame.GAME_WIDTH, RiverRaidGame.GAME_HEIGHT), Color.White);
+            spriteBatch.Draw(controllers, controls.padBackgroundPosition, controls.padBackgroundTexPosition, Color.White * 0.7f);
+            spriteBatch.Draw(controllers, controls.padPosition, controls.padTexPosition, Color.White * 0.7f);
+            spriteBatch.Draw(controllers, controls.shotPosition, controls.shotTexPosition, Color.White * controls.shotOpacity);
 #endif
 
             string scoreString = player.score.ToString();
@@ -287,13 +303,11 @@ namespace RiverRaid.RaidGame
             
 
             Rectangle rectangle_y = new Rectangle(numWidth + 660, RiverRaidGame.GAME_HEIGHT - 60, numbers.Width / 10, numbers.Height);
-            //spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
             if (player.lifes == 3) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(2 * numWidth, 0, numWidth, numbers.Height), Color.White);
             else if (player.lifes == 2) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(1 * numWidth, 0, numWidth, numbers.Height), Color.White);
             else if (player.lifes == 1) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(0 * numWidth, 0, numWidth, numbers.Height), Color.White);
             else if (player.lifes == 0) spriteBatch.Draw(numbers, rectangle_y, new Rectangle(9 * numWidth, 0, numWidth, numbers.Height), Color.White);
-
-           //TODO decrease and increase fuel
+            
 
         }
 
@@ -314,6 +328,9 @@ namespace RiverRaid.RaidGame
             take_fuel = content.Load<SoundEffect>("Shared/Audio/take_fuel");
             shot = content.Load<Song>("Shared/Audio/shot");
 
+            // naprawa buga z dzwiekiem?
+            MediaPlayer.Play(shot);
+            MediaPlayer.Stop();
 
 
 
@@ -321,7 +338,7 @@ namespace RiverRaid.RaidGame
 
             //font = content.Load<SpriteFont>("Shared/Fonts/scoreFont");
 #if ANDROID
-            controllers = content.Load<Texture2D>("Android/Textures/controllers");
+            controllers = content.Load<Texture2D>("Android/Textures/controllers_new");
 
 #endif
 
@@ -342,6 +359,7 @@ namespace RiverRaid.RaidGame
             //player.lifes = 3;
             //moveWorld = false;
             //tileMap.LoadFirstMap();
+            controls.Reset();
             Revive();
             moveWorld = false;
             player.lifes = 3;
@@ -392,7 +410,7 @@ namespace RiverRaid.RaidGame
                     {
                         if(tileMap.TileMapArray[row, col] == 8 || tileMap.TileMapArray[row, col] == 9)
                         {
-                            Rectangle bridgeTile = new Rectangle(col * 120, row * 120 + (int)tileMap.tileMapShift, 120, 120);
+                            Rectangle bridgeTile = new Rectangle(col * 120, (row-1) * 120 + (int)tileMap.tileMapShift, 120, 120);
                             if (bridgeTile.Intersects(bullet.hitbox))
                             {
                                 GameEvent(GameEventEnum.SHOOT_BRIDGE);
@@ -483,6 +501,7 @@ namespace RiverRaid.RaidGame
         {
             if (!moveWorld)
                 return;
+#if WINDOWS
             if (player.movingLeft)
             {
                 player.X -= deltaTime * 0.7f;
@@ -491,13 +510,13 @@ namespace RiverRaid.RaidGame
             {
                 player.X += deltaTime * 0.7f;
             }
-#if WINDOWS
             if (game.previousKeyboardState.IsKeyUp(Keys.Left))
                 player.movingLeft = false;
             if (game.previousKeyboardState.IsKeyUp(Keys.Right))
                 player.movingRight = false;
 #elif ANDROID
-
+            player.playerYVelocity = (controls.move.Y + 1.2f) / 2.2f;
+            player.X += deltaTime * (controls.move.X / (10.0f / 7.0f));
 #endif
 
             tileMap.UpdateTilePosition(deltaTime, player.playerYVelocity, this);
@@ -506,7 +525,7 @@ namespace RiverRaid.RaidGame
             CheckCollision();
             
             player.playerYVelocity = 0.5f;
-            player.fuelLeft -= 0.008f * deltaTime;
+            player.fuelLeft -= 0.003f * deltaTime;
             if (player.fuelLeft < 0)
             {
                 hit.Play();

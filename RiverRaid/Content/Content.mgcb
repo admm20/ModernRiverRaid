@@ -16,7 +16,7 @@
 #begin Android/Maps.txt
 /copy:Android/Maps.txt
 
-#begin Android/Textures/controllers.png
+#begin Android/Textures/controllers_new.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -26,7 +26,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Android/Textures/controllers.png
+/build:Android/Textures/controllers_new.png
 
 #begin Shared/Audio/destroy.wav
 /importer:WavImporter

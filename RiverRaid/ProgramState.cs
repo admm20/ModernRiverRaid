@@ -17,7 +17,7 @@ namespace RiverRaid
         public abstract void OnEnter();
 
         // funkcja wywolywana po wcisnieciu i puszczeniu przycisku myszy (win) albo tapnięciu w ekran (android)
-        public abstract void CursorClick(int x, int y);
+        public abstract void CursorClick(int x, int y, int id);
 
         // wywoływana, gdy LPM jest trzymany. Dla ekranow z multitouchem podawany tez jest id
         public abstract void CursorHolding(int x, int y, int id);

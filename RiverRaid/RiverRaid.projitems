@@ -9,6 +9,7 @@
     <Import_RootNamespace>RiverRaid</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Controls.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\GameMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\MapLoader.cs" />

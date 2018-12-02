@@ -83,11 +83,6 @@ namespace RiverRaid.RaidGame
                     }
                 }
             }
-            Console.WriteLine(Maps.Count);
-            Console.WriteLine(Maps.Count);
-            Console.WriteLine(Maps.Count);
-            Console.WriteLine(Maps.Count);
-            Console.WriteLine(Maps.Count);
         }
 
 #endif

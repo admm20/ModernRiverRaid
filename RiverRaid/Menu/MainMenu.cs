@@ -23,6 +23,7 @@ namespace RiverRaid.Menu
         private Texture2D exit;
         private Texture2D exit_selected;
 
+        private bool blockTouch = false;
 
         private Boolean show_menu = true;
         private int option = 0; 
@@ -30,9 +31,7 @@ namespace RiverRaid.Menu
         private int position_y = 0;
         private Rectangle start_rectangle= new Rectangle(RiverRaidGame.GAME_WIDTH / 3 - 50, RiverRaidGame.GAME_HEIGHT / 2 - 130, 714, 130);
         private Rectangle exit_rectangle = new Rectangle(RiverRaidGame.GAME_WIDTH / 3 - 50, RiverRaidGame.GAME_HEIGHT / 2 + 130, 714, 130);
-
-        // DO WYWALENIA
-        private List<Rectangle> MultitouchTest = new List<Rectangle>();
+        
 
 
         public override void NormalToBlackTransitionFinished(bool dozmiany)
@@ -46,11 +45,13 @@ namespace RiverRaid.Menu
 
         public override void BlackToNormalTransitionFinished()
         {
-            // JESZCZE NIE ZAPROGRAMOWANE!!! ale raczej nie bedzie potrzebne
+
         }
 
-        public override void CursorClick(int x, int y)
+        public override void CursorClick(int x, int y, int id)
         {
+            if (blockTouch)
+                return;
             //android
             if(start_rectangle.Contains(x,y))
                 option = 1; 
@@ -65,6 +66,7 @@ namespace RiverRaid.Menu
                 case 1:
                     //NormalToBlackTransitionFinished(false);
                     //game.BlackToNormalTransition
+                    blockTouch = true;
                     game.NormalToBlackTransition();
                     break;
                 case 2:
@@ -130,7 +132,7 @@ namespace RiverRaid.Menu
 
         public override void OnEnter()
         {
-            
+            blockTouch = false;   
         }
 
         public override void Update(int deltaTime, RiverRaidGame game)
